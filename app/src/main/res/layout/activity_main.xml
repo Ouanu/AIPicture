@@ -42,6 +42,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:background="@drawable/rectangle_btn"
+            android:onClick="setModel"
             android:text="设置模式"
             android:textColor="@color/white"
             android:textSize="20sp"/>
