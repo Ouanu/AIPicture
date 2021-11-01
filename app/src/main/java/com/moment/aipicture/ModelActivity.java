@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,8 +60,10 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.change_btn) {
             Log.d(TAG, "onClick: -------------test");
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                bitmap = toGrayScale(bitmap);
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                imageBit = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+//                bitmap = toGrayScale(bitmap);
+                Bitmap bitmap = toHighPixel(4);
                 ivImage.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -83,8 +86,25 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         paint.setColorFilter(filter);
         c.drawBitmap(bmpOriginal, 0, 0, paint);
         return bmpGrayscale;
-
     }
-
+    public Bitmap toHighPixel(int b) {
+        int width = imageBit.getWidth();
+        int high = imageBit.getHeight();
+        int amountToExpand;
+        int[][] finalImage = new int[width*b][high*b];
+        Bitmap bitmap = Bitmap.createBitmap(width*b, high*b, Bitmap.Config.ARGB_8888);
+        if(finalImage.length < finalImage[0].length) {
+            amountToExpand = (finalImage.length + 1)/2;
+        } else {
+            amountToExpand = (finalImage[0].length + 1)/2;
+        }
+        for(int i = 0; i<finalImage.length; i++){
+            for(int j = 0; j<finalImage[0].length; j++){
+//                finalImage[i][j]=imageBit.getPixel(i / amountToExpand,j / amountToExpand);
+                bitmap.setPixel(i,j,imageBit.getPixel(i / amountToExpand,j / amountToExpand));
+            }
+        }
+        return bitmap;
+    }
 
 }
