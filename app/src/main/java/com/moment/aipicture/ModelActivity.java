@@ -90,6 +90,7 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
     public Bitmap toHighPixel(int b) {
         int width = imageBit.getWidth();
         int high = imageBit.getHeight();
+        System.out.println("width:" + width + " high:" + high);
         int amountToExpand;
         int[][] finalImage = new int[width*b][high*b];
         Bitmap bitmap = Bitmap.createBitmap(width*b, high*b, Bitmap.Config.ARGB_8888);
