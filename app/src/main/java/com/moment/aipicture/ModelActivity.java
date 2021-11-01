@@ -87,18 +87,22 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         c.drawBitmap(bmpOriginal, 0, 0, paint);
         return bmpGrayscale;
     }
+
     public Bitmap toHighPixel(int b) {
         int width = imageBit.getWidth();
         int high = imageBit.getHeight();
         System.out.println("width:" + width + " high:" + high);
         int amountToExpand;
         int[][] finalImage = new int[width*b][high*b];
+
         Bitmap bitmap = Bitmap.createBitmap(width*b, high*b, Bitmap.Config.ARGB_8888);
         if(finalImage.length < finalImage[0].length) {
             amountToExpand = (finalImage.length + 1)/2;
         } else {
             amountToExpand = (finalImage[0].length + 1)/2;
         }
+        System.out.println("finalImage:" + finalImage.length);
+        System.out.println("amountToExpand:" + amountToExpand);
         for(int i = 0; i<finalImage.length; i++){
             for(int j = 0; j<finalImage[0].length; j++){
 //                finalImage[i][j]=imageBit.getPixel(i / amountToExpand,j / amountToExpand);
