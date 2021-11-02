@@ -84,7 +84,8 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
                 Log.d(TAG, "onClick: " + "TargetPath isn't exists");
             } else {
                 Log.d(TAG, "onClick: " + "TargetPath is exists");
-                File saveFile = new File(targetPath, "name");
+                String fileName = String.valueOf(System.currentTimeMillis());
+                File saveFile = new File(targetPath, fileName);
                 try {
                     FileOutputStream saveImgOut = new FileOutputStream(saveFile);
                     // compress - —πÀıµƒ“‚Àº
