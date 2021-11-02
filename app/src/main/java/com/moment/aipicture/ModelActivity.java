@@ -5,10 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +37,8 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
     private int[][] pixelsArray;
     private String resultPixels;
     private TextView tvPixels;
+    private Button btnSave;
+    private Bitmap imageBitmap;
 
 
     @Override
@@ -53,6 +57,7 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         changeBtn = (Button) findViewById(R.id.change_btn);
         changeBtn.setOnClickListener(this);
         tvPixels = (TextView) findViewById(R.id.tv_pixels);
+        btnSave = (Button) findViewById(R.id.btn_save);
     }
 
     @Override
@@ -63,13 +68,16 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
 //                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 imageBit = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
 //                bitmap = toGrayScale(bitmap);
-                Bitmap bitmap = toHighPixel(4);
-
-                ivImage.setImageBitmap(bitmap);
+                imageBitmap = toHighPixel(4);
+                ivImage.setImageBitmap(imageBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d(TAG, "onClick: " + e.getMessage());
             }
+        } else if(v.getId() == R.id.btn_save) {
+            imageBitmap = ((BitmapDrawable)ivImage.getDrawable()).getBitmap();
+            String targetPath = this.getFilesDir() + "/images/";
+
         }
     }
 
@@ -94,18 +102,18 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         int high = imageBit.getHeight();
         System.out.println("width:" + width + " high:" + high);
         int amountToExpand;
-        int[][] finalImage = new int[width*b][high*b];
+        int[][] finalImage = new int[width * b][high * b];
 
-        Bitmap bitmap = Bitmap.createBitmap(width*b, high*b, Bitmap.Config.ARGB_8888);
-        if(finalImage.length < finalImage[0].length) {
-            amountToExpand = (finalImage.length + 1)/2;
+        Bitmap bitmap = Bitmap.createBitmap(width * b, high * b, Bitmap.Config.ARGB_8888);
+        if (finalImage.length < finalImage[0].length) {
+            amountToExpand = (finalImage.length + 1) / 2;
         } else {
-            amountToExpand = (finalImage[0].length + 1)/2;
+            amountToExpand = (finalImage[0].length + 1) / 2;
         }
         System.out.println("finalImage:" + finalImage.length);
         System.out.println("amountToExpand:" + amountToExpand);
-        for(int i = 0; i<finalImage.length; i++){
-            for(int j = 0; j<finalImage[0].length; j++){
+        for (int i = 0; i < finalImage.length; i++) {
+            for (int j = 0; j < finalImage[0].length; j++) {
 //                finalImage[i][j]=imageBit.getPixel(i / amountToExpand,j / amountToExpand);
                 int originColor = imageBit.getPixel(i / b, j / b);
 
@@ -124,5 +132,6 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         }
         return bitmap;
     }
+
 
 }
