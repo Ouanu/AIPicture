@@ -7,10 +7,8 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +20,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.moment.aipicture.utils.FileUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -58,6 +60,7 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         changeBtn.setOnClickListener(this);
         tvPixels = (TextView) findViewById(R.id.tv_pixels);
         btnSave = (Button) findViewById(R.id.btn_save);
+        btnSave.setOnClickListener(this);
     }
 
     @Override
@@ -77,7 +80,23 @@ public class ModelActivity extends AppCompatActivity implements View.OnClickList
         } else if(v.getId() == R.id.btn_save) {
             imageBitmap = ((BitmapDrawable)ivImage.getDrawable()).getBitmap();
             String targetPath = this.getFilesDir() + "/images/";
-
+            if (!FileUtils.fileIsExist(targetPath)) {
+                Log.d(TAG, "onClick: " + "TargetPath isn't exists");
+            } else {
+                Log.d(TAG, "onClick: " + "TargetPath is exists");
+                File saveFile = new File(targetPath, "name");
+                try {
+                    FileOutputStream saveImgOut = new FileOutputStream(saveFile);
+                    // compress - 压缩的意思
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, saveImgOut);
+                    //存储完成后需要清除相关的进程
+                    saveImgOut.flush();
+                    saveImgOut.close();
+                    Log.d("Save Bitmap", "The picture is save to your phone!");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
